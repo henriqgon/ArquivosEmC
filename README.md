@@ -1,2 +1,2 @@
-# Fun-esPortugol
+# FuncoesPortugol
 Funções em Portugol

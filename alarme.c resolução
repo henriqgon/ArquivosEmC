@@ -1,0 +1,23 @@
+#include <stdio.h>
+#define DIA 1440
+
+int main() {
+    int H1, M1, H2, M2;
+
+    while ( scanf("%d %d %d %d", &H1, &M1, &H2, &M2) && H1 + M1 + H2 + M2 != 0) {
+        
+        int Min1 = H1 * 60 + M1;
+        int Min2 = H2 * 60 + M2;
+        
+        int dormir;
+        if (Min2 >= Min1) {
+            dormir = Min2 - Min1;
+        } else {
+            dormir = (DIA - Min1) + Min2;
+        }
+        
+        printf("%d\n", dormir);
+    }
+    
+    return 0;
+}

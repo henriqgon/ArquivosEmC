@@ -1,0 +1,30 @@
+#include<stdio.h>
+
+int main(){
+
+    int n, carta, somaTotal=0, somaPossuida=0;
+
+    scanf("%d", &n);
+
+    if(n >= 1 && n <= 50){
+
+          somaTotal = n * (n + 1) / 2;
+
+    for(int i= 0; i < n - 1; i++){
+
+        scanf("%d", &carta);
+
+        if(carta >= 1 && carta <=n){
+
+            somaPossuida+=carta;
+
+        }
+    }
+
+    printf("%d\n", somaTotal - somaPossuida);
+
+
+    }
+
+    return 0;
+}

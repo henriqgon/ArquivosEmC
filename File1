@@ -1,0 +1,237 @@
+#include<stdio.h>  // Inclui a biblioteca padrão para funções de entrada e saída
+
+// Definição da estrutura Node (Nó) que representa um elemento da lista
+struct Node {
+    int value;  // Valor armazenado no nó
+    Node* next;  // Ponteiro para o próximo nó na lista
+
+    // Construtor da estrutura Node
+    Node(int _value) {  
+        value = _value;  // Inicializa o valor do nó
+        next = NULL;  // Inicializa o ponteiro 'next' como NULL
+    }
+};
+
+// Definição da estrutura List (Lista), que representa uma lista encadeada
+struct List {
+    Node* start;  // Ponteiro para o primeiro nó da lista
+    Node* end;    // Ponteiro para o último nó da lista
+    int s;        // Tamanho da lista
+
+    // Construtor da estrutura List (inicializa uma lista vazia)
+    List() {
+        start = NULL;  // A lista começa vazia, sem primeiro nó
+        end = NULL;    // A lista começa vazia, sem último nó
+        s = 0;         // Tamanho inicial da lista é 0
+    }
+
+    // Função que verifica se a lista está vazia (O(1))
+    bool empty() {
+        return start == NULL && end == NULL;  // Retorna true se a lista estiver vazia
+    }
+
+    // Função que adiciona um valor no final da lista (O(1))
+    void pushBack(int value) {
+        Node* n = new Node(value);  // Cria um novo nó com o valor fornecido
+        s++;  // Incrementa o tamanho da lista
+        if (empty()) {  // Se a lista estiver vazia
+            start = n;  // O novo nó é o primeiro e o último nó
+            end = n;
+            return;
+        }
+        end->next = n;  // Adiciona o novo nó após o último nó
+        end = n;  // Atualiza o ponteiro 'end' para o novo último nó
+    }
+
+    // Função que adiciona um valor no início da lista (O(1))
+    void pushFront(int value) {
+        Node* n = new Node(value);  // Cria um novo nó com o valor fornecido
+        s++;  // Incrementa o tamanho da lista
+        if (empty()) {  // Se a lista estiver vazia
+            start = n;  // O novo nó é o primeiro e o último nó
+            end = n;
+            return;
+        }
+        n->next = start;  // O novo nó aponta para o antigo primeiro nó
+        start = n;  // O ponteiro 'start' agora aponta para o novo primeiro nó
+    }
+
+    // Função que imprime todos os valores da lista (O(n))
+    void print() {
+        Node* aux = start;  // Inicia o ponteiro auxiliar no primeiro nó
+        while (aux != NULL) {  // Enquanto não chegar ao final da lista
+            printf("%d -> ", aux->value);  // Imprime o valor do nó
+            aux = aux->next;  // Avança para o próximo nó
+        }
+        printf("\n");  // Quebra de linha após imprimir todos os elementos
+    }
+
+    // Função que retorna o tamanho da lista (O(1))
+    int size() {
+        return s;  // Retorna o valor da variável 's', que armazena o tamanho
+    }
+
+    // Função que remove o primeiro nó da lista (O(1))
+    void popFront() {
+        if (empty()) return;  // Se a lista estiver vazia, não faz nada
+        if (size() == 1) {  // Se houver apenas um nó na lista
+            delete(start);  // Deleta o nó
+            start = NULL;  // A lista fica vazia
+            end = NULL;
+            s = 0;  // Tamanho é 0
+            return;
+        }
+        Node* aux = start;  // Ponteiro auxiliar para o primeiro nó
+        start = start->next;  // Atualiza o ponteiro 'start' para o próximo nó
+        delete(aux);  // Deleta o nó removido
+        s--;  // Decrementa o tamanho da lista
+    }
+
+    // Função que remove o último nó da lista (O(n))
+    void popBack() {
+        if (empty()) return;  // Se a lista estiver vazia, não faz nada
+        if (size() == 1) {  // Se houver apenas um nó na lista
+            delete(start);  // Deleta o nó
+            start = NULL;  // A lista fica vazia
+            end = NULL;
+            s = 0;  // Tamanho é 0
+            return;
+        }
+        Node* aux = start;  // Ponteiro auxiliar para o primeiro nó
+        while (aux->next != end) {  // Percorre até o penúltimo nó
+            aux = aux->next;
+        }
+        delete(end);  // Deleta o último nó
+        end = aux;  // Atualiza o ponteiro 'end' para o penúltimo nó
+        end->next = NULL;  // O último nó agora é NULL
+        s--;  // Decrementa o tamanho da lista
+    }
+
+    // Função que insere um valor na posição 'p' da lista (O(n))
+    void insert(int v, int p) {
+        if (p <= 0) {  // Se a posição for menor ou igual a 0, insere no início
+            pushFront(v);
+            return;
+        }
+        if (p >= s) {  // Se a posição for maior ou igual ao tamanho, insere no final
+            pushBack(v);
+            return;
+        }
+        Node* n = new Node(v);  // Cria um novo nó com o valor fornecido
+        s++;  // Incrementa o tamanho da lista
+        Node* a = start;  // Ponteiro auxiliar para percorrer a lista
+        for (int i = 0; i < p - 1; i++) {  // Percorre até o nó anterior à posição
+            a = a->next;
+        }
+        n->next = a->next;  // O novo nó aponta para o próximo nó
+        a->next = n;  // O nó anterior aponta para o novo nó
+    }
+
+    // Função que remove 'n' elementos do final da lista (O(n * s))
+    void atividade1a(int n) {
+        for (int i = 0; i < n; i++) {  // Repete 'n' vezes
+            popBack();  // Remove o último nó
+        }
+    }
+
+    // Função que remove 'n' elementos do final da lista de forma otimizada (O(s))
+    void atividade1b(int n) {
+        if (n < s) {  // Se 'n' for menor que o tamanho da lista
+            Node* aux = start;  // Ponteiro auxiliar para percorrer a lista
+            for (int i = 0; i < s - n - 1; i++) {  // Vai até o penúltimo nó
+                aux = aux->next;
+            }
+            end = aux;  // Atualiza o ponteiro 'end' para o penúltimo nó
+            s -= n;  // Decrementa o tamanho da lista
+            for (int i = 0; i < n; i++) {  // Deleta 'n' nós do final
+                Node* toDel = aux->next;
+                aux->next = toDel->next;
+                delete(toDel);  // Deleta o nó removido
+            }
+        } else {  // Se 'n' for maior ou igual ao tamanho da lista
+            while (!empty()) {  // Remove todos os nós
+                popFront();
+            }
+        }
+    }
+
+    // Função que remove o segundo nó da lista (O(1))
+    void atividade2() {
+        if (s <= 1) return;  // Se a lista tiver 0 ou 1 elemento, não faz nada
+        if (s == 2) {  // Se a lista tiver exatamente 2 elementos
+            popBack();  // Remove o último nó
+            return;
+        }
+        Node* second = start->next;  // Ponteiro para o segundo nó
+        start->next = second->next;  // O primeiro nó agora aponta para o terceiro nó
+        delete(second);  // Deleta o segundo nó
+        s--;  // Decrementa o tamanho da lista
+    }
+
+    // Função que adiciona o tamanho da lista no final (O(1))
+    void atividade3() {
+        pushBack(s);  // Adiciona o valor de 's' (tamanho da lista) no final
+    }
+
+    // Função que preenche a lista com os números de 1 a 'n' (O(n))
+    void atividade4(int n) {
+        for (int i = 1; i <= n; i++) {  // Insere números de 1 a 'n'
+            pushBack(i);
+        }
+    }
+
+    // Função que insere um valor 'v' no penúltimo lugar da lista (O(s))
+    void atividade5a(int v) {
+        if (s <= 1) return;  // Se a lista tiver 0 ou 1 elemento, não faz nada
+        Node* aux = start;  // Ponteiro auxiliar para percorrer a lista
+        while (aux->next != end) {  // Vai até o penúltimo nó
+            aux = aux->next;
+        }
+        Node* n = new Node(v);  // Cria o novo nó
+        n->next = end;  // O novo nó aponta para o último nó
+        aux->next = n;  // O penúltimo nó agora aponta para o novo nó
+        s++;  // Incrementa o tamanho da lista
+    }
+
+    // Função que insere um valor 'v' na penúltima posição da lista (O(s))
+    void atividade5b(int v) {
+        insert(v, s - 1);  // Usa a função 'insert' para adicionar no penúltimo lugar
+    }
+};
+
+// Função principal que testa as operações da lista
+int main() {
+    List l;  // Cria uma nova lista
+
+    // Testa diversas operações na lista
+    l.pushFront(10);
+    l.pushFront(3);
+    l.pushBack(3);
+    l.pushFront(8);
+    l.pushBack(50);
+    l.pushFront(78);
+    l.pushBack(1);
+    l.pushBack(75);
+    l.pushFront(25);
+    l.pushBack(60);
+    l.pushFront(34);
+    l.pushBack(80);
+    l.pushBack(30);
+    l.pushBack(23);
+    l.pushFront(5);
+    l.pushFront(66);
+
+    // Insere o valor 5 na posição 9
+    l.insert(5, 9);  
+
+    // Imprime a lista
+    l.print();  
+
+    // Realiza a operação atividade1b (remove os 10 últimos elementos)
+    l.atividade1b(10);
+
+    // Imprime a lista após a remoção
+    l.print();  
+
+    return 0;  // Fim do programa
+}
